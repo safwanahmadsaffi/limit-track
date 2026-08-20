@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Token Account Form View -->
+    <record id="view_skysize_token_account_form" model="ir.ui.view">
+        <field name="name">skysize.token.account.form</field>
+        <field name="model">skysize.token.account</field>
+        <field name="arch" type="xml">
+            <form string="Token Account">
+                <header>
+                    <button name="action_refresh_token" string="Regenerate API Token" type="object" class="btn-primary"/>
+                    <field name="status" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Account Name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="api_token" password="True"/>
+                        </group>
+                        <group>
+                            <field name="token_balance"/>
+                            <field name="token_limit"/>
+                            <field name="last_updated"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Usage Logs">
+                            <field name="log_ids">
+                                <tree string="Logs" editable="bottom">
+                                    <field name="create_date"/>
+                                    <field name="tokens_used"/>
+                                    <field name="balance_after"/>
+                                    <field name="reference"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Token Account Tree View -->
+    <record id="view_skysize_token_account_tree" model="ir.ui.view">
+        <field name="name">skysize.token.account.tree</field>
+        <field name="model">skysize.token.account</field>
+        <field name="arch" type="xml">
+            <tree string="Token Accounts">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="token_balance"/>
+                <field name="token_limit"/>
+                <field name="status"/>
+                <field name="last_updated"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_skysize_token_account" model="ir.actions.act_window">
+        <field name="name">SkySize Token Accounts</field>
+        <field name="res_model">skysize.token.account</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first SkySize token account!</p>
+        </field>
+    </record>
+
+    <!-- Menuitem -->
+    <menuitem id="menu_skysize_root" name="SkySize Dashboard" sequence="10"/>
+    <menuitem id="menu_skysize_tokens" name="Token Accounts" parent="menu_skysize_root" action="action_skysize_token_account" sequence="10"/>
+</odoo>

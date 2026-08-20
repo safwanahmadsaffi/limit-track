@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Limit-Track Dashboard</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Limit-Track</h2>
+        <div class="section">
+            <h3>Odoo Sync Settings</h3>
+            <input type="text" id="odooUrl" placeholder="Odoo URL (e.g. https://limit-track.skysize.io)">
+            <input type="password" id="odooToken" placeholder="API Access Token">
+            <button id="saveBtn">Save Settings</button>
+        </div>
+        <div class="section">
+            <h3>Today's Tokens</h3>
+            <div id="stats">Loading...</div>
+        </div>
+        <div class="footer">
+            <a href="https://limit-track.skysize.io/web" target="_blank">Open Odoo Dashboard</a>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

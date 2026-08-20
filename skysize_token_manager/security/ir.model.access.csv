@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_skysize_token_account_user,skysize.token.account.user,model_skysize_token_account,base.group_user,1,1,1,1
+access_skysize_token_account_manager,skysize.token.account.manager,model_skysize_token_account,base.group_system,1,1,1,1
+access_skysize_token_log_user,skysize.token.log.user,model_skysize_token_log,base.group_user,1,1,1,1
+access_skysize_token_log_manager,skysize.token.log.manager,model_skysize_token_log,base.group_system,1,1,1,1
