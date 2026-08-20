@@ -1,6 +1,6 @@
 {
     'name': 'SkySize Token Manager & Extension Sync',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Tools',
     'summary': 'Automatic token tracking, extension API sync, and real-time dashboard for SkySize Odoo instances.',
     'description': """
