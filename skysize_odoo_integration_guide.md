@@ -1,27 +1,20 @@
-# SkySize Odoo Hosting & Automatic Token Integration Guide
+# SkySize Odoo Hosting & Automatic Token Integration Guide (Odoo 19.0)
 
-Published by **Manus AI** for Odoo platform deployment using **SkySize (`skysize.io`)** managed hosting [1].
+Published by **Manus AI** for Odoo platform deployment using **SkySize (`skysize.io`)** managed hosting.
 
 ---
 
 ## 1. Odoo Project Hosting Selection
 
-When setting up your project on Odoo hosting platforms (such as SkySize or Odoo.sh), you were prompted with:
+When setting up your project on Odoo hosting platforms (such as SkySize or Odoo.sh), you must choose **"Yes, we'll write custom code"**.
 
-> *Will this project use custom code? Custom modules, themes or any development work.*
-> - **No, standard Odoo is enough**
-> - **Yes, we'll write custom code**
-
-### Recommendation
-You **must** choose **"Yes, we'll write custom code"**. 
-
-Because your project requires custom token management, API endpoint controllers for extension synchronization, automated token deductions, and custom dashboard views, standard Odoo apps will not suffice. Selecting "Yes, we'll write custom code" links your GitHub repository (`safwanahmadsaffi/Pull-Request`) to your SkySize instance so that every push automatically builds, tests, and deploys your custom module.
+Because your project requires custom token management, API endpoint controllers for extension synchronization, automated token deductions, and custom dashboard views, standard Odoo apps will not suffice. Selecting "Yes, we'll write custom code" links your GitHub repository to your SkySize instance so that every push automatically builds, tests, and deploys your custom module.
 
 ---
 
 ## 2. Complete Custom Module Code (`skysize_token_manager`)
 
-Below is the complete, production-ready Odoo module structure designed to handle automatic token updates, extension synchronization, secure token authentication, and real-time dashboard tracking.
+Below is the production-ready Odoo 19.0 module structure designed to handle automatic token updates, extension synchronization, secure token authentication, and real-time dashboard tracking.
 
 ### Directory Structure
 ```text
@@ -48,15 +41,15 @@ skysize_token_manager/
 ### 2.1 Manifest File (`__manifest__.py`)
 ```python
 {
-    'name': 'SkySize Token Manager & Extension Sync',
-    'version': '18.0.1.0.0',
+    'name': 'Limit-Track Token Manager & Extension Sync',
+    'version': '19.0.1.0.0',
     'category': 'Tools',
-    'summary': 'Automatic token tracking, extension API sync, and real-time dashboard for SkySize Odoo instances.',
+    'summary': 'Automatic token tracking, extension API sync, and real-time dashboard for SkySize Odoo 19 instances.',
     'description': """
-        This module provides automatic token lifecycle management, extension endpoint synchronization, and a real-time dashboard inside Odoo.
+        This module provides automatic token lifecycle management, extension endpoint synchronization, and a real-time dashboard inside Odoo 19.0.
     """,
     'author': 'Manus AI',
-    'website': 'https://www.skysize.io',
+    'website': 'https://limit-track.skysize.io',
     'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',
@@ -116,27 +109,9 @@ class SkysizeTokenAccount(models.Model):
         return True
 ```
 
-#### `models/token_log.py`
-```python
-from odoo import models, fields
-
-class SkysizeTokenLog(models.Model):
-    _name = 'skysize.token.log'
-    _description = 'SkySize Token Usage Log'
-    _order = 'create_date desc'
-
-    account_id = fields.Many2one('skysize.token.account', string='Token Account', required=True, ondelete='cascade')
-    tokens_used = fields.Float(string='Tokens Deducted', required=True)
-    balance_after = fields.Float(string='Balance After Transaction', required=True)
-    reference = fields.Char(string='Usage Reference / Extension')
-    create_date = fields.Datetime(string='Timestamp', readonly=True)
-```
-
 ---
 
 ### 2.3 Controllers (`controllers/main.py`)
-This controller provides secure JSON endpoints for your browser extensions or external apps to check balances and deduct tokens automatically upon usage.
-
 ```python
 from odoo import http
 from odoo.http import request
@@ -190,18 +165,7 @@ class SkysizeTokenController(http.Controller):
 
 ---
 
-### 2.4 Security Access (`security/ir.model.access.csv`)
-```csv
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_skysize_token_account_user,skysize.token.account.user,model_skysize_token_account,base.group_user,1,1,1,1
-access_skysize_token_account_manager,skysize.token.account.manager,model_skysize_token_account,base.group_system,1,1,1,1
-access_skysize_token_log_user,skysize.token.log.user,model_skysize_token_log,base.group_user,1,1,1,1
-access_skysize_token_log_manager,skysize.token.log.manager,model_skysize_token_log,base.group_system,1,1,1,1
-```
-
----
-
-### 2.5 Views (`views/token_views.xml`)
+### 2.4 Views (`views/token_views.xml`) - Odoo 19 List View Format
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
@@ -221,7 +185,7 @@ access_skysize_token_log_manager,skysize.token.log.manager,model_skysize_token_l
                     <group>
                         <group>
                             <field name="user_id"/>
-                            <field name="api_token" password="True"/>
+                            <field name="api_token" password="1"/>
                         </group>
                         <group>
                             <field name="token_balance"/>
@@ -231,13 +195,13 @@ access_skysize_token_log_manager,skysize.token.log.manager,model_skysize_token_l
                     </group>
                     <notebook>
                         <page string="Usage Logs">
-                            <field name="log_ids">
-                                <tree string="Logs" editable="bottom">
+                            <field name="log_ids" readonly="1">
+                                <list string="Logs">
                                     <field name="create_date"/>
                                     <field name="tokens_used"/>
                                     <field name="balance_after"/>
                                     <field name="reference"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -246,60 +210,33 @@ access_skysize_token_log_manager,skysize.token.log.manager,model_skysize_token_l
         </field>
     </record>
 
-    <record id="view_skysize_token_account_tree" model="ir.ui.view">
-        <field name="name">skysize.token.account.tree</field>
+    <record id="view_skysize_token_account_list" model="ir.ui.view">
+        <field name="name">skysize.token.account.list</field>
         <field name="model">skysize.token.account</field>
         <field name="arch" type="xml">
-            <tree string="Token Accounts">
+            <list string="Token Accounts">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="token_balance"/>
                 <field name="token_limit"/>
                 <field name="status"/>
                 <field name="last_updated"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="action_skysize_token_account" model="ir.actions.act_window">
-        <field name="name">SkySize Token Accounts</field>
+        <field name="name">Limit-Track Token Accounts</field>
         <field name="res_model">skysize.token.account</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Create your first SkySize token account!</p>
+            <p class="o_view_nocontent_smiling_face">Create your first Limit-Track token account!</p>
         </field>
     </record>
 
-    <menuitem id="menu_skysize_root" name="SkySize Dashboard" sequence="10"/>
-    <menuitem id="menu_skysize_tokens" name="Token Accounts" parent="menu_skysize_root" action="action_skysize_token_account" sequence="10"/>
+    <menuitem id="menu_limit_track_root" name="Limit-Track" sequence="10"/>
+    <menuitem id="menu_limit_track_tokens" name="Token Accounts" parent="menu_limit_track_root" action="action_skysize_token_account" sequence="10"/>
 </odoo>
-```
-
----
-
-### 2.6 Unit Tests (`tests/test_tokens.py`)
-```python
-from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
-
-class TestSkysizeTokens(TransactionCase):
-
-    def setUp(self):
-        super(TestSkysizeTokens, self).setUp()
-        self.token_account = self.env['skysize.token.account'].create({
-            'name': 'Test Account',
-            'token_balance': 500.0,
-            'token_limit': 1000.0,
-        })
-
-    def test_token_deduction(self):
-        self.token_account.deduct_tokens(100.0, reference='Test Deduction')
-        self.assertEqual(self.token_account.token_balance, 400.0)
-        self.assertEqual(len(self.token_account.log_ids), 1)
-
-    def test_insufficient_tokens(self):
-        with self.assertRaises(ValidationError):
-            self.token_account.deduct_tokens(600.0, reference='Overdraft')
 ```
 
 ---
@@ -307,23 +244,18 @@ class TestSkysizeTokens(TransactionCase):
 ## 3. Step-by-Step Deployment on SkySize
 
 1. **Commit and Push to GitHub**:
-   Push the `skysize_token_manager` module to your repository `safwanahmadsaffi/Pull-Request`:
+   Push the unified module to your repository `safwanahmadsaffi/limit-track`:
    ```bash
-   git add skysize_token_manager
-   git commit -m "Add SkySize token manager and extension sync module"
-   git push origin main
+   git add .
+   git commit -m "Unified Release: Odoo 19.0 Module + Integrated Extension"
+   git push origin main --force
    ```
-2. **Link to SkySize**:
-   Log into your SkySize dashboard (`skysize.io`), select your project/instance, and link your repository.
-3. **Install the Module**:
+2. **Update Apps List in Odoo**:
    - Go to your Odoo instance (ensure Developer Mode is enabled).
-   - Navigate to **Apps**, click **Update Apps List**.
-   - Search for **SkySize Token Manager & Extension Sync** and click **Activate**.
-4. **Verify Dashboard & API**:
-   - Access the **SkySize Dashboard** top menu in Odoo to monitor token balances and transaction logs in real time.
-   - Use your browser extension or external API client to send POST requests to `/api/skysize/tokens/consume` with your `api_token` and `amount`. Token balances will update instantly both in the extension and on the Odoo dashboard.
-
----
-
-## References
-[1] SkySize Managed Odoo Hosting: https://www.skysize.io/
+   - Navigate to **Apps**, click **Update Apps List**, and click **Update**.
+3. **Install the Module**:
+   - Search for **Limit Track Token Manager** (Version 19.0.1.0.0).
+   - Click **Activate**.
+4. **Configure & Connect**:
+   - Open the **Limit-Track** menu in Odoo to get your **Access Token**.
+   - Paste the token into your Chrome Extension settings to start automatic synchronization.
