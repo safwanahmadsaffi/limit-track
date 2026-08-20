@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Token Log Tree View -->
+    <record id="view_skysize_token_log_tree" model="ir.ui.view">
+        <field name="name">skysize.token.log.tree</field>
+        <field name="model">skysize.token.log</field>
+        <field name="arch" type="xml">
+            <tree string="Logs" create="false" edit="false">
+                <field name="create_date"/>
+                <field name="tokens_used"/>
+                <field name="balance_after"/>
+                <field name="reference"/>
+            </tree>
+        </field>
+    </record>
+
     <!-- Token Account Form View -->
     <record id="view_skysize_token_account_form" model="ir.ui.view">
         <field name="name">skysize.token.account.form</field>
@@ -27,8 +41,8 @@
                     </group>
                     <notebook>
                         <page string="Usage Logs">
-                            <field name="log_ids">
-                                <tree string="Logs" editable="bottom">
+                            <field name="log_ids" readonly="1">
+                                <tree string="Logs">
                                     <field name="create_date"/>
                                     <field name="tokens_used"/>
                                     <field name="balance_after"/>
@@ -60,15 +74,15 @@
 
     <!-- Action -->
     <record id="action_skysize_token_account" model="ir.actions.act_window">
-        <field name="name">SkySize Token Accounts</field>
+        <field name="name">Limit-Track Token Accounts</field>
         <field name="res_model">skysize.token.account</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Create your first SkySize token account!</p>
+            <p class="o_view_nocontent_smiling_face">Create your first Limit-Track token account!</p>
         </field>
     </record>
 
     <!-- Menuitem -->
-    <menuitem id="menu_skysize_root" name="SkySize Dashboard" sequence="10"/>
-    <menuitem id="menu_skysize_tokens" name="Token Accounts" parent="menu_skysize_root" action="action_skysize_token_account" sequence="10"/>
+    <menuitem id="menu_limit_track_root" name="Limit-Track" sequence="10"/>
+    <menuitem id="menu_limit_track_tokens" name="Token Accounts" parent="menu_limit_track_root" action="action_skysize_token_account" sequence="10"/>
 </odoo>
