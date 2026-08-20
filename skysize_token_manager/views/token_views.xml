@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Token Log Tree View -->
-    <record id="view_skysize_token_log_tree" model="ir.ui.view">
-        <field name="name">skysize.token.log.tree</field>
+    <!-- Token Log List View -->
+    <record id="view_skysize_token_log_list" model="ir.ui.view">
+        <field name="name">skysize.token.log.list</field>
         <field name="model">skysize.token.log</field>
         <field name="arch" type="xml">
-            <tree string="Logs" create="false" edit="false">
+            <list string="Logs" create="false" edit="false">
                 <field name="create_date"/>
                 <field name="tokens_used"/>
                 <field name="balance_after"/>
                 <field name="reference"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -42,12 +42,12 @@
                     <notebook>
                         <page string="Usage Logs">
                             <field name="log_ids" readonly="1">
-                                <tree string="Logs">
+                                <list string="Logs">
                                     <field name="create_date"/>
                                     <field name="tokens_used"/>
                                     <field name="balance_after"/>
                                     <field name="reference"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -56,19 +56,19 @@
         </field>
     </record>
 
-    <!-- Token Account Tree View -->
-    <record id="view_skysize_token_account_tree" model="ir.ui.view">
-        <field name="name">skysize.token.account.tree</field>
+    <!-- Token Account List View -->
+    <record id="view_skysize_token_account_list" model="ir.ui.view">
+        <field name="name">skysize.token.account.list</field>
         <field name="model">skysize.token.account</field>
         <field name="arch" type="xml">
-            <tree string="Token Accounts">
+            <list string="Token Accounts">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="token_balance"/>
                 <field name="token_limit"/>
                 <field name="status"/>
                 <field name="last_updated"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -76,7 +76,7 @@
     <record id="action_skysize_token_account" model="ir.actions.act_window">
         <field name="name">Limit-Track Token Accounts</field>
         <field name="res_model">skysize.token.account</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Create your first Limit-Track token account!</p>
         </field>
